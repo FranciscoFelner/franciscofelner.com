@@ -1,9 +1,392 @@
-<html>
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XP DA MACACA - Study Quest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*------------------------------------*\
+          #RESET & ESTILOS GERAIS
+        \*------------------------------------*/
+        :root {
+            --cor-fundo: #1a1a1a;
+            --cor-cartao: #2b2b2b;
+            --cor-texto: #f0f0f0;
+            --cor-primaria: #ff00ff; /* Magenta Neon */
+            --cor-secundaria: #ff77ff; /* Rosa Neon mais claro */
+            --cor-sombra: rgba(0, 0, 0, 0.4);
+            --font-pixel: 'Press Start 2P', cursive;
+            --font-texto: 'Roboto', sans-serif;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-texto);
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            font-family: var(--font-pixel);
+        }
+        
+        /*------------------------------------*\
+          #CABEÇALHO E FORMULÁRIO
+        \*------------------------------------*/
+        .header-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--cor-primaria);
+            text-shadow: 2px 2px 0px var(--cor-secundaria);
+            margin-bottom: 1.5rem;
+        }
+
+        .add-subject-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        #subject-name-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--cor-primaria);
+            border-radius: 8px;
+            background-color: var(--cor-cartao);
+            color: var(--cor-texto);
+            font-size: 1rem;
+        }
+
+        #subject-name-input::placeholder {
+            color: #888;
+        }
+
+        #add-subject-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--cor-primaria);
+            color: var(--cor-fundo);
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        #add-subject-btn:hover {
+            background-color: var(--cor-secundaria);
+            transform: translateY(-2px);
+        }
+
+        /*------------------------------------*\
+          #LISTA E CARTÕES DE DISCIPLINA
+        \*------------------------------------*/
+        #subjects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .subject-card {
+            background-color: var(--cor-cartao);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px var(--cor-sombra);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative; /* Para a animação */
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 0, 255, 0.3);
+        }
+
+        .subject-card h2 {
+            font-size: 1.5rem;
+            color: var(--cor-texto);
+        }
+        
+        .subject-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .subject-level {
+            font-size: 1rem;
+            color: var(--cor-secundaria);
+        }
+        
+        .subject-xp {
+            font-size: 1rem;
+            color: var(--cor-primaria);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background-color: #444;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+            border-radius: 6px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .xp-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--cor-primaria);
+            color: var(--cor-fundo);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: flex-end;
+        }
+
+        .xp-button:hover {
+            background-color: var(--cor-secundaria);
+        }
+
+        /*------------------------------------*\
+          #ANIMAÇÃO DE BANANA
+        \*------------------------------------*/
+        .banana-animation {
+            position: absolute;
+            top: 60%;
+            font-size: 2rem;
+            pointer-events: none;
+            animation: banana-rain 1.5s ease-out forwards;
+            user-select: none; /* Previne a seleção do emoji */
+        }
+
+        @keyframes banana-rain {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) rotate(360deg);
+            }
+        }
+    </style>
+</head>
 <body>
-  <h1>CHICÃO</h1>
-  <p>Welcome to my website!</p>
-  <img src="https://content.codecademy.com/articles/github-pages-via-web-app/happy-ice-cream.gif" />
-</body> 
 
+    <header class="header-container">
+        <h1>XP DA MACACA</h1>
+        <div class="add-subject-form">
+            <input type="text" id="subject-name-input" placeholder="Nome da Disciplina">
+            <button id="add-subject-btn">Adicionar</button>
+        </div>
+    </header>
+
+    <main id="subjects-container">
+        <!-- Os cartões das disciplinas serão adicionados aqui via JavaScript -->
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elementos do DOM
+            const subjectNameInput = document.getElementById('subject-name-input');
+            const addSubjectBtn = document.getElementById('add-subject-btn');
+            const subjectsContainer = document.getElementById('subjects-container');
+
+            // XP necessário para subir de nível
+            const XP_PER_LEVEL = 69;
+
+            // Carregar dados do localStorage
+            let subjects = JSON.parse(localStorage.getItem('studyQuestSubjects')) || [];
+
+            /**
+             * Salva o estado atual das disciplinas no localStorage.
+             */
+            const saveSubjects = () => {
+                localStorage.setItem('studyQuestSubjects', JSON.stringify(subjects));
+            };
+
+            /**
+             * Mostra a animação de ganho de XP com bananas.
+             * @param {HTMLElement} cardElement - O elemento do cartão onde a animação ocorrerá.
+             */
+            const showBananaAnimation = (cardElement) => {
+                // Cria várias bananas para um efeito de "chuva"
+                for (let i = 0; i < 5; i++) {
+                    const bananaEl = document.createElement('div');
+                    bananaEl.classList.add('banana-animation');
+                    bananaEl.textContent = '�';
+
+                    // Posição horizontal e atraso de animação aleatórios
+                    const randomX = (Math.random() - 0.5) * 80; // espalhamento de 80px
+                    const randomDelay = Math.random() * 0.5; // atraso até 0.5s
+
+                    bananaEl.style.left = `calc(50% + ${randomX}px)`;
+                    bananaEl.style.animationDelay = `${randomDelay}s`;
+                    
+                    cardElement.appendChild(bananaEl);
+
+                    // Remove o elemento da animação após terminar
+                    setTimeout(() => {
+                        bananaEl.remove();
+                    }, 1500 + randomDelay * 1000); // Duração da animação + atraso
+                }
+            };
+
+            /**
+             * Renderiza todos os cartões de disciplina na página.
+             */
+            const renderSubjects = () => {
+                subjectsContainer.innerHTML = ''; // Limpa o contentor
+                subjects.forEach((subject, index) => {
+                    const card = document.createElement('div');
+                    card.classList.add('subject-card');
+                    card.dataset.index = index; // Guarda o índice para referência
+
+                    const progressPercentage = (subject.xp / XP_PER_LEVEL) * 100;
+
+                    card.innerHTML = `
+                        <h2>${subject.name}</h2>
+                        <div class="subject-stats">
+                            <span class="subject-level">Nível: ${subject.level}</span>
+                            <span class="subject-xp">XP: ${subject.xp} / ${XP_PER_LEVEL}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${progressPercentage}%;"></div>
+                        </div>
+                        <button class="xp-button">+7 XP</button>
+                    `;
+                    subjectsContainer.appendChild(card);
+                });
+            };
+
+            /**
+             * Adiciona uma nova disciplina.
+             * @param {string} name - O nome da nova disciplina.
+             */
+            const addSubject = (name) => {
+                if (!name || name.trim() === '') {
+                    alert('Por favor, insira um nome para a disciplina.');
+                    return;
+                }
+
+                if (subjects.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+                     alert('Essa disciplina já existe!');
+                     return;
+                }
+
+                subjects.push({
+                    name: name.trim(),
+                    level: 1,
+                    xp: 0
+                });
+
+                saveSubjects();
+                renderSubjects();
+                subjectNameInput.value = '';
+            };
+
+            /**
+             * Adiciona XP a uma disciplina e verifica se subiu de nível.
+             * @param {number} index - O índice da disciplina no array `subjects`.
+             */
+            const addXp = (index) => {
+                const subject = subjects[index];
+                subject.xp += 7;
+
+                if (subject.xp >= XP_PER_LEVEL) {
+                    subject.level++;
+                    subject.xp -= XP_PER_LEVEL;
+                    
+                    setTimeout(() => {
+                       alert(`LEVEL UP! A disciplina ${subject.name} alcançou o Nível ${subject.level}!`);
+                    }, 300);
+                }
+
+                saveSubjects();
+                
+                const card = subjectsContainer.querySelector(`.subject-card[data-index='${index}']`);
+                if(card) {
+                    showBananaAnimation(card);
+                    updateCardUI(card, subject);
+                }
+            };
+            
+            /**
+            * Atualiza a interface de um cartão específico.
+            * @param {HTMLElement} cardElement - O elemento do cartão a ser atualizado.
+            * @param {object} subject - O objeto da disciplina com os dados mais recentes.
+            */
+            function updateCardUI(cardElement, subject) {
+                 const levelEl = cardElement.querySelector('.subject-level');
+                 const xpEl = cardElement.querySelector('.subject-xp');
+                 const progressBarEl = cardElement.querySelector('.progress-bar');
+                 
+                 levelEl.textContent = `Nível: ${subject.level}`;
+                 xpEl.textContent = `XP: ${subject.xp} / ${XP_PER_LEVEL}`;
+                 progressBarEl.style.width = `${(subject.xp / XP_PER_LEVEL) * 100}%`;
+            }
+
+            //------------------------------------*\\
+            //  EVENT LISTENERS
+            //------------------------------------*\\
+            
+            addSubjectBtn.addEventListener('click', () => {
+                addSubject(subjectNameInput.value);
+            });
+
+            subjectNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addSubject(subjectNameInput.value);
+                }
+            });
+            
+            subjectsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('xp-button')) {
+                    const card = e.target.closest('.subject-card');
+                    if (card) {
+                        const index = parseInt(card.dataset.index, 10);
+                        addXp(index);
+                    }
+                }
+            });
+
+            // Renderização inicial ao carregar a página
+            renderSubjects();
+        });
+    </script>
+</body>
 </html>
+�
